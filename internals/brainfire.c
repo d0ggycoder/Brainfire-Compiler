@@ -12,7 +12,8 @@ const str INSTRUCTION_SET[] = {
     {"call shift_l\n",13},              //lshift
     {"addb $1,(%rax)\n",15},            //inc
     {"subb $1,(%rax)\n",15},            //dec
-    {"call print_byte\n",16},           //print
+    {"call p_byte\n",16},               //print byte
+    {"call p_char\n",16},               //print char
     {"loop%d:\n",0},                    //start loop
     {"cmpb $0,(%rax)\njnz loop%d\n",0}  //end loop
 };
@@ -82,6 +83,7 @@ int compile(char* src, char* dst){
     int callind = 0;
     int callid = 0;
     int len = 0;
+    //TODO: Add /comment/ capability and print byte vs. print char
     while(fread(rbuf,sizeof(char),1,fin) != 0){
         instruction = *rbuf;
         switch(instruction){
