@@ -1,5 +1,9 @@
 .data
 BUF_SIZE = 128
+format_byte: .asciz "Testing"
+.LC0:
+.ascii "Hello, world\n\0"
+
 
 .bss
 .align 16
@@ -9,18 +13,21 @@ buf:
 .text
     .globl main
     .globl BUF_SIZE
-    .extern shift_l
-    .extern shift_r
-    .extern p_byte
-    .extern p_char
+    .extern printf
+    #.extern shift_l
+    #.extern shift_r
+    #.extern p_byte
+    #.extern p_char
 
 main:
-    subq $32, %rsp         # shadow space
+	pushq	%rbp
+	movq	%rsp, %rbp
+	subq	$32, %rsp
 
-    lea buf(%rip),%eax
-    movb $69, (%eax)
-    call p_byte
+    leaq buf(%rip),%rax
+    movb $69, (%rax)
 
-    xor %eax, %eax         # return
-    addq $32, %rsp
-    ret
+	movl	$0, %eax
+	addq	$32, %rsp
+	popq	%rbp
+	ret

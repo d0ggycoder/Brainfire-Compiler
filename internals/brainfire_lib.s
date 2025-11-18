@@ -51,11 +51,21 @@ shift_l:
     ret
 
 p_byte:
-    movzx (%eax), %edx        # printf arg2 = result
-    lea format_byte(%rip), %rcx # printf arg1 = format string
+    pushq %rax
+    subq $32, %rsp
+    movzx (%rax), %rdx        # printf arg2 = result
+    leaq format_byte(%rip), %rcx # printf arg1 = format string
     call printf
+    addq $32, %rsp
+    popq %rax
+    ret
 
 p_char:
-    movl (%eax), %edx        # printf arg2 = result
-    lea format_char(%rip), %rcx # printf arg1 = format string
+    pushq %rax
+    subq $32, %rsp
+    movzx (%rax), %rdx        # printf arg2 = result
+    leaq format_char(%rip), %rcx # printf arg1 = format string
     call printf
+    addq $32, %rsp
+    popq %rax
+    ret
