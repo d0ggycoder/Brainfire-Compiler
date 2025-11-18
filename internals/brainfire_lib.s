@@ -34,26 +34,26 @@ p_error:
 
 shift_r:
     inc %rax
-    cmp $BUF_SIZE, %rax 
-    jnz shift_r_safe
-    mov $1, %rdi
-    jmp p_error
-    shift_r_safe:
+    #cmp $BUF_SIZE, %rax 
+    #jnz shift_r_safe
+    #mov $1, %rdi
+    #jmp p_error
+    #shift_r_safe:
     ret
 
 shift_l:
-    cmp $0, %rax
-    jnz shift_l_safe
-    mov $1, %rdi
-    jmp p_error
-    shift_l_safe:
+    #cmp $0, %rax
+    #jnz shift_l_safe
+    #mov $1, %rdi
+    #jmp p_error
+    #shift_l_safe:
     dec %rax
     ret
 
 p_byte:
     pushq %rax
     subq $32, %rsp
-    movzx (%rax), %rdx        # printf arg2 = result
+    movzx (%rax), %rdx           # printf arg2 = result
     leaq format_byte(%rip), %rcx # printf arg1 = format string
     call printf
     addq $32, %rsp
@@ -63,7 +63,7 @@ p_byte:
 p_char:
     pushq %rax
     subq $32, %rsp
-    movzx (%rax), %rdx        # printf arg2 = result
+    movzx (%rax), %rdx           # printf arg2 = result
     leaq format_char(%rip), %rcx # printf arg1 = format string
     call printf
     addq $32, %rsp

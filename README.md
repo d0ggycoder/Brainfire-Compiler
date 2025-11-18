@@ -1,7 +1,7 @@
 # Brainfire Compiler
 
 A simple C-based compiler for the Brainfire Esolang made by an idiot that has no idea what they're doing  
-**NOTE: MUST HAVE GCC INSTALLED AND BE RUNNING LINUX (OR A COMPATIBLE INTERFACE) FOR IT TO FUNCTION PROPERLY**
+**NOTE: MUST HAVE GCC INSTALLED FOR IT TO FUNCTION PROPERLY**
 
 ## Brainfire Documentation:  
 
@@ -21,6 +21,7 @@ Brainfire implements very simple code execution, with code being read sequential
  - (End Loop) `)`: Ends a loop (jumps back to the most recent begin loop if the value is non-zero) 
 
 ## Usage:
+### Linux:
 If the brainfire executable does not already exist, then build it using  
 `gcc internals/brainfire.c -o brainfire`  
 
@@ -28,3 +29,8 @@ If the brainfire executable does not already exist, then build it using
 `./brainfire [pathname].bf`  
 2. This generates an intermediary assembly file and a compiled executable with the same path name as the source. For example, if the source file is `example.bf`, then after running `./brainfire example.bf`, there will now be the files `example.s` and `example.exe` or some equivalents.
 3. Then, you can execute the generated executable using `./example`
+
+### Windows:
+If the brainfire executable does not already exist, use the compile batch file to create it:
+`./compile.bat`
+Then, to use, follow the same instructions as Linux

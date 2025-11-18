@@ -130,26 +130,6 @@ int compile(char* src, char* dst){
     return EXIT_SUCCESS;
 }
 int main(int argc, char* argv[]){
-    // const char *out = "test.txt";
-    // const char *message = "Hello, world\n";
-    // FILE *fp = fopen(out, "w");
-    // if(fp == NULL){
-    //     perror("Error opening file");
-    //     return EXIT_FAILURE;
-    // } 
-    // size_t len = fwrite(message, sizeof(char), strlen(message),fp);
-    // if(len!=strlen(message)){
-    //     perror("Error writing to file");
-    //     return EXIT_FAILURE;
-    // }
-
-    // if(fclose(fp) != 0){
-    //     perror("Error closing file");
-    //     return EXIT_FAILURE;
-    // }
-
-    // printf("Wow, it worked!");
-    // return EXIT_SUCCESS;
     
     if(argc != 2){
         printf("Error, wrong number of arguments provided");

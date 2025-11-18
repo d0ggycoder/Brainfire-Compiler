@@ -1,17 +1,47 @@
 @echo off
 set remove_temps="true"
 set debug_flag="false"
-set recompile_flag="false"
-set file_path=brainfire
+set file_path=""
+
+@REM Compile compiler
+IF not EXIST "internals/brainfire-windows.exe" (
+    gcc internals/brainfire-windows.c -o internals/brainfire-windows
+)
+
+@REM Fetch source
+IF "%~1" == "" (
+    echo Error: Empty Path
+    exit /b 1
+)
+IF not EXIST "%~1" (
+    echo Error: Source program does not exist
+    exit /b 1
+)
+IF not "%~x1" == ".bf" (
+    echo Error: Found file extension %~x1, expected .bf
+    exit /b 1
+)
+
+set in_orig=%~1
+set in_path=%~n1.s
+set in_root=%~n1
+SHIFT
+
+@REM Clean up any previous junk
+IF EXIST "brainfire-lib.o" (
+    DEL "brainfire-lib.o"
+)
+IF EXIST "%in_root%.o" (
+    DEL "%in_root%.o"
+)
+IF EXIST "%in_path%" (
+    DEL "%in_path%"
+)
 
 :parse_args
 IF "%~1" == "" GOTO end_parse
 
-IF /I "%~1" == "-recompile-objects" (
-    set recompile_flag="true"
-) ELSE IF /I "%~1" == "-r" (
-    set recompile_flag="true"
-) ELSE IF /I "%~1" == "-save-temps" (
+IF /I "%~1" == "-save-temps" (
     set remove_temps="false"
 ) ELSE IF /I "%~1" == "-s" (
     set remove_temps="false"
@@ -37,38 +67,41 @@ SHIFT
 GOTO parse_args
 
 :print_help
-echo Usage: compile [options]
+echo Usage: compile ^<path^>[options]
 echo Options:
 echo    -help                   Prints this help screen
-echo    -recompile-objects/-r   Recompiles object files regardless if they already exist
-echo    -save-temps/-s          Preserves the temporary object files after compilation
+echo    -save-temps/-s          Preserves the Assembly file after compilation
 echo    -debug/-d               Compiles with debug options
-echo    -o ^<arg^>                Outputs brainfire compiler to desired file instead of default brainfire
+echo    -o ^<output-path^>      Outputs brainfire compiler to desired file instead of default brainfire
 exit /b 1
 
 :end_parse
+@REM Verify output file exists
+IF %file_path% == "" (
+    echo Please specify an output file using -o ^<output-path^>
+    exit /b 1
+)
+
+@REM Compile
+IF not EXIST %in_path% (
+    echo. > %in_path%
+)
+
+start "" "%~dp0internals\brainfire-windows.exe" %in_orig% %in_path%
+@REM pause
+@REM Compile with gdb if specified
 IF %debug_flag% == "true" (
-    gcc -c -g internals/brainfire_runner.s -o temp/br.o
-    gcc -c -g internals/brainfire_lib.s -o temp/bl.o
-    gcc -g temp/bl.o temp/br.o -o %file_path%
-    GOTO remove
+    gcc -c -g %in_path% -o %in_root%.o
+    gcc -c -g internals/brainfire_lib.s -o "brainfire-lib.o"
+    gcc -g %in_root%.o "brainfire-lib.o" -o %file_path%
+) ELSE (
+    gcc -c %in_path% -o %in_root%.o
+    gcc -c internals/brainfire_lib.s -o "brainfire-lib.o"
+    gcc %in_root%.o "brainfire-lib.o" -o %file_path%
 )
 
-IF %recompile_flag%=="true" (
-    gcc -c internals/brainfire_lib.s -o temp/bl.o
-    gcc -c internals/brainfire_runner.s -o temp/br.o
-)
-IF not EXIST "temp/br.o" (
-    gcc -c internals/brainfire_runner.s -o temp/br.o
-)
-IF not EXIST "temp/bl.o" (
-    gcc -c internals/brainfire_lib.s -o temp/bl.o
-)
-
-gcc temp/bl.o temp/br.o -o %file_path%
-
-:remove
+DEL "brainfire-lib.o"
+DEL "%in_root%.o"
 IF %remove_temps% == "true" (
-    DEL "%~dp0temp\bl.o"
-    DEL "%~dp0temp\br.o"
+    DEL %in_path%
 )
