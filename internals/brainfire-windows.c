@@ -52,7 +52,7 @@ int compile(const char* progRef, const char* src, const char* dst){
 
     // Compiler loop
     while(fread(cref,sizeof(char),1,fin) != 0){
-        if(isComment^=(cref[0]=='/')) continue;
+        if((isComment^=(cref[0]=='/')) || cref[0]=='/') continue;
         switch(cref[0]){
             case '>': fwrite(INSTRUCTION_SET[0].v,sizeof(char),INSTRUCTION_SET[0].length,fout); break;
             case '<': fwrite(INSTRUCTION_SET[1].v,sizeof(char),INSTRUCTION_SET[1].length,fout); break;
@@ -72,8 +72,9 @@ int compile(const char* progRef, const char* src, const char* dst){
                 fwrite(LINEBUFFER,sizeof(char),len,fout);
                 break;
             default:
-                if(cref[0] == ' ' || cref[0] == '\n' || cref[0] == '\t' || cref[0] == '\r') return EXIT_FAILURE;
+                if(cref[0] == ' ' || cref[0] == '\n' || cref[0] == '\t' || cref[0] == '\r') continue;
                 printf("Unknown instruction: %c\nTerminating compilation\n",cref[0]);
+                return EXIT_FAILURE;
         }
     } 
     // Finish reading the rest of the origin file
