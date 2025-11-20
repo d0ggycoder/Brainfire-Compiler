@@ -18,19 +18,23 @@ Brainfire implements very simple code execution, with code being read sequential
  - (Deincrement) `-` : deincrements the value pointed to by the value pointer
  - (Read) `.` : prints the current value as an ascii character (i.e. if the value is 65, it will print 'a')
  - (Begin loop) `(` : Begins a loop (sets a point to jump back to)
- - (End Loop) `)`: Ends a loop (jumps back to the most recent begin loop if the value is non-zero) 
+ - (End Loop) `)` : Ends a loop (jumps back to the most recent begin loop if the value is non-zero) 
+ - (Comment) `/` : Initiates or ends a comment
+ - Whitespace (` `, `\n`,`\t`) is ignored by the compiler 
 
 ## Usage:
 ### Linux:
+**WARNING LINUX IS CURRENLTY UNSUPPORTED WITH THE CURRENT VERSION AND WILL LIKELY NOT RUN**
 If the brainfire executable does not already exist, then build it using  
-`gcc internals/brainfire.c -o brainfire`  
+`gcc internals/brainfire-linux.c -o brainfire-linux`  
 
 1. To use, create a file with the file extension `.bf`, then type the following command:  
-`./brainfire [pathname].bf`  
-2. This generates an intermediary assembly file and a compiled executable with the same path name as the source. For example, if the source file is `example.bf`, then after running `./brainfire example.bf`, there will now be the files `example.s` and `example.exe` or some equivalents.
+`./brainfire-linux [pathname].bf`  
+2. This generates an intermediary assembly file and a compiled executable with the same path name as the source. For example, if the source file is `example.bf`, then after running `./brainfire-linux example.bf`, there will now be the files `example.s` and `example.exe` or some equivalents.
 3. Then, you can execute the generated executable using `./example`
 
 ### Windows:
-If the brainfire executable does not already exist, use the compile batch file to create it:
-`./compile.bat`
-Then, to use, follow the same instructions as Linux
+1. To use, create a file with the file extension `.bf`, then use the following command:  
+`./compile.bat [file-name] -o [destination] {options}` 
+2. Input the file name as the path of your `.bf` file and the destination as any name. See the -help option for any additional information on the command and other options
+3. Execute the generated executable by doing `./[destination]`
